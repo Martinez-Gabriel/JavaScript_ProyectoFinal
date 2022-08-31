@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nombre": "procesador",
+    "imagen": "../imagenesProcesadores/ryzen-3600x.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "motherboard",
+    "imagen": "../imagenesProcesadores/asus-tuf-gaming-b450m-plus-ii.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "almacenamiento",
+    "imagen": "../imagenesProcesadores/wester-digital-1-tb.jpg"
+  }
+]

@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "nombre": "intel i5 9600k",
+    "marca": "intel",
+    "tipo": "procesador",
+    "precio": 35000,
+    "imagen": "../imagenesProcesadores/intel-core-i5-9600k.jpg"
+  },
+  {
+    "id": 2,
+    "nombre": "AMD Ryzen 3600X",
+    "marca": "AMD",
+    "tipo": "procesador",
+    "precio": 47000,
+    "imagen": "../imagenesProcesadores/ryzen-3600x.jpg"
+  },
+  {
+    "id": 3,
+    "nombre": "Aorus ultra gaming 2.0",
+    "marca": "Aorus",
+    "tipo": "motherboard",
+    "precio": 42000,
+    "imagen": "../imagenesProcesadores/aorus-ultra-gaming-2.0.png"
+  },
+  {
+    "id": 4,
+    "nombre": "intel i7 9700k",
+    "marca": "intel",
+    "tipo": "procesador",
+    "precio": 45000,
+    "imagen": "../imagenesProcesadores/intel-core-i7-9700k.jpg"
+  },
+  {
+    "id": 5,
+    "nombre": "intel i9 9900k",
+    "marca": "intel",
+    "tipo": "procesador",
+    "precio": 55000,
+    "imagen": "../imagenesProcesadores/intel-core-i9-9900k.jpg"
+  },
+  {
+    "id": 6,
+    "nombre": "SSD Kingstone 250GB",
+    "marca": "Kingstone",
+    "tipo": "almacenamiento",
+    "precio": 20000,
+    "imagen": "../imagenesProcesadores/ssd-kingston.jpg"
+  },
+  {
+    "id": 7,
+    "nombre": "HDD 1TB",
+    "marca": "Wester Digital",
+    "tipo": "almacenamiento",
+    "precio": 10000,
+    "imagen": "../imagenesProcesadores/wester-digital-1-tb.jpg"
+  },
+  {
+    "id": 8,
+    "nombre": "HDD 2TB",
+    "marca": "Wester Digital",
+    "tipo": "almacenamiento",
+    "precio": 17000,
+    "imagen": "../imagenesProcesadores/wester-digital-2-tb.png"
+  },
+  {
+    "id": 9,
+    "nombre": "aorus b450 pro wifi",
+    "marca": "Aorus",
+    "tipo": "motherboard",
+    "precio": 55000,
+    "imagen": "../imagenesProcesadores/b450-aorus-pro-wifi.jpg"
+  },
+  {
+    "id": 10,
+    "nombre": "asus tuf gaming b450m plus 2",
+    "marca": "Asus",
+    "tipo": "motherboard",
+    "precio": 65000,
+    "imagen": "../imagenesProcesadores/asus-tuf-gaming-b450m-plus-ii.jpg"
+  }
+]

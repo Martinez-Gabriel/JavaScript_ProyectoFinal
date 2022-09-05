@@ -1,3 +1,50 @@
+Swal.fire({
+  title: 'Es mayor de edad?',
+  showDenyButton: true,
+  showCancelButton: true,
+  confirmButtonText: 'SI',
+  denyButtonText: `NO`,
+}).then((result) => {
+  /* Read more about isConfirmed, isDenied below */
+  if (result.isConfirmed) {
+    Swal.fire('Bienvenido!', '', 'success')
+    document.getElementById("containerTitulo").innerHTML += `
+    <div id="containerTitulo" class="container mb-3">
+    <h1 id="tituloPrincipal">Tienda! PROYECT-HARDWARE</h1>
+    <h2>Seleccione el tipo de producto que desea comprar!</h2>
+    <div id="filtroProductos" class="row px-2 gap-3 pt-3"></div>
+    <div id="productosFiltrados" class="row px-2 gap-3 pt-3"></div>
+    </div>
+    
+    <div id = "containerCarrito">
+    <h3>Su Carrito!!!</h3>
+    <table id="tablaCarrito" class="table">
+    <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Precio</th>
+    </tr>
+    </table>
+    </div>
+    
+    <div id="totalCarrito" class="alert alert-primary" role="alert"></div>
+    <button id="finCompra" type="submit" class="btn btn-primary">Finalizar Compra</button>
+    `;
+    cargarFiltros();
+    cargarProductosDelLocalStorage();
+     
+    
+  } else if (result.isDenied) {
+    Swal.fire('Usted no es mayor de edad, no puede visualizar el contenido', '', 'info')
+    document.getElementById("containerTitulo").innerHTML += `
+    <div id="containerTitulo" class="container mb-3">
+    <h1>Usted no pueda acceder al sitio</h1>
+    </div>
+    
+    `;
+  }
+})
+
 
 class Carrito {
   constructor() {
@@ -214,49 +261,4 @@ function sumaCarrito () {
 
 
 
-Swal.fire({
-  title: 'Es mayor de edad?',
-  showDenyButton: true,
-  showCancelButton: true,
-  confirmButtonText: 'SI',
-  denyButtonText: `NO`,
-}).then((result) => {
-  /* Read more about isConfirmed, isDenied below */
-  if (result.isConfirmed) {
-    Swal.fire('Bienvenido!', '', 'success')
-    document.getElementById("containerTitulo").innerHTML += `
-    <div id="containerTitulo" class="container mb-3">
-    <h1 id="tituloPrincipal">Tienda! PROYECT-HARDWARE</h1>
-    <h2>Seleccione el tipo de producto que desea comprar!</h2>
-    <div id="filtroProductos" class="row px-2 gap-3 pt-3"></div>
-    <div id="productosFiltrados" class="row px-2 gap-3 pt-3"></div>
-    </div>
-    
-    <div id = "containerCarrito">
-    <h3>Su Carrito!!!</h3>
-    <table id="tablaCarrito" class="table">
-    <tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Precio</th>
-    </tr>
-    </table>
-    </div>
-    
-    <div id="totalCarrito" class="alert alert-primary" role="alert"></div>
-    <button id="finCompra" type="submit" class="btn btn-primary">Finalizar Compra</button>
-    `;
-    cargarFiltros();
-  
-     
-    
-  } else if (result.isDenied) {
-    Swal.fire('Usted no es mayor de edad, no puede visualizar el contenido', '', 'info')
-    document.getElementById("containerTitulo").innerHTML += `
-    <div id="containerTitulo" class="container mb-3">
-    <h1>Usted no pueda acceder al sitio</h1>
-    </div>
-    
-    `;
-  }
-})
+

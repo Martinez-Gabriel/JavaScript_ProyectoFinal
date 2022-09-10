@@ -1,3 +1,5 @@
+//SWEET ALERT DE INICIO
+
 Swal.fire({
   title: 'Es mayor de edad?',
   showDenyButton: true,
@@ -5,46 +7,54 @@ Swal.fire({
   confirmButtonText: 'SI',
   denyButtonText: `NO`,
 }).then((result) => {
-  /* Read more about isConfirmed, isDenied below */
   if (result.isConfirmed) {
     Swal.fire('Bienvenido!', '', 'success')
     document.getElementById("containerTitulo").innerHTML += `
     <div id="containerTitulo" class="container mb-3">
-    <h1 id="tituloPrincipal">Tienda! PROYECT-HARDWARE</h1>
-    <h2>Seleccione el tipo de producto que desea comprar!</h2>
-    <div id="filtroProductos" class="row px-2 gap-3 pt-3"></div>
-    <div id="productosFiltrados" class="row px-2 gap-3 pt-3"></div>
+      <h1 id="tituloPrincipal">Tienda! PROYECT-HARDWARE</h1>
+      <h2>Seleccione el tipo de producto que desea comprar!</h2>
+      <div id="orden1">
+        <div id="filtroProductos" class="row px-2 gap-3 pt-3"></div>
+      </div>
+      <div id="orden2">
+        <div id="productosFiltrados" class="row px-2 gap-3 pt-3"></div>
+      </div>
     </div>
     
-    <div id = "containerCarrito">
-    <h3>Su Carrito!!!</h3>
-    <table id="tablaCarrito" class="table">
-    <tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Precio</th>
-    </tr>
-    </table>
+    <div id="orden3">
+      <div id = "containerCarrito">
+      <b><h3>Su Carrito!!!</h3></b>
+        <table id="tablaCarrito" class="table">
+          <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Precio</th>
+          </tr>
+        </table>
+      </div>
     </div>
     
-    <div id="totalCarrito" class="alert alert-primary" role="alert"></div>
-    <button id="finCompra" type="submit" class="btn btn-primary">Finalizar Compra</button>
+    <div id="totalCarrito" class="estiloTotal" class="alert alert-primary" role="alert"></div>
+    <div id="centroBotonFinalizarCompra">
+      <button id="finCompra" type="submit" class="btn btn-primary">Finalizar Compra</button>
+    <div>
     `;
     cargarFiltros();
     cargarProductosDelLocalStorage();
-     
-    
+
+
   } else if (result.isDenied) {
     Swal.fire('Usted no es mayor de edad, no puede visualizar el contenido', '', 'info')
     document.getElementById("containerTitulo").innerHTML += `
-    <div id="containerTitulo" class="container mb-3">
-    <h1>Usted no pueda acceder al sitio</h1>
+    <div id="containerTitulo" class="resultadoDenegado" class="container mb-3">
+    <h1 class="sinAcceso">USTED NO PUEDO ACCEDER AL SITIO!!!</h1>
     </div>
-    
     `;
   }
 })
 
+
+//CLASES
 
 class Carrito {
   constructor() {
@@ -55,6 +65,13 @@ class Carrito {
     this.productosEnElCarrito.push(producto)
     this.calcularPrecioTotalMasIva()
   }
+  borrarCarrito(id) {
+    document.getElementById(`botonEliminar${producto.id}`).addEventListener('click', function () {
+      const eliminarProductoDelCarrito = carrito.filter((producto) => producto.id === nombre)
+      eliminarProductoDelCarrito.splice (1,2)
+    })
+  }
+
   mostrarCarrito () {
     return this.productosEnElCarrito
   }
@@ -89,6 +106,8 @@ class Producto {
   }
 }
 
+//CREO UN NUEVO CARRITO
+
 const carrito = new Carrito()
 
 const productos = new Productos()
@@ -115,6 +134,7 @@ const agregarProductosALaClase = async () => {
 
 agregarProductosALaClase()
 
+//SELECCIONO LAS CATERGORIAS
 
 const cargarFiltros = async () => {
   const contenedorFiltros = document.getElementById('filtroProductos')
@@ -149,14 +169,16 @@ const cargarFiltros = async () => {
 }
 
 //VALIDO QUE LA SELECCION DE PRODUCTO NO SE REPITA
+
 const mostrarProductosFiltrados = (nombre) => {
   // limpiar el contenedor de productos filtrados...
   if (document.getElementById('productosFiltrados').firstChild) {
     const borrarDiv = document.getElementById('productosFiltrados')
     borrarDiv.innerHTML = ``
   }
-  //FIN DE LA VALIDACION
+
   //FILTRO LOS PRODUCTOS
+
   const filtrarProductos = productosCargadosDelJson.filter((producto) => producto.tipo === nombre)
   const contenedorProductos = document.getElementById('productosFiltrados')
 
@@ -185,16 +207,24 @@ const mostrarProductosFiltrados = (nombre) => {
     `
     contenedorProductos.append(contenedorCard)
 
+    
     document.getElementById(`boton${producto.id}`).addEventListener('click', function () {
       agregarCarrito(producto);
+      Swal.fire({
+        title: 'Felicitaciones!',
+        text: 'Se Agrego el producto al carrito correctamente',
+        confirmButtonText: 'Ok',
+        icon: 'success',
+      }); 
     })
-
   }
 
 }
 
+//AGREGO PRODUCTOS AL CARRITO DE COMPRAS
+
 function agregarCarrito (productoComprado) {
-  // debugger
+  //debugger
   carrito.agregarAlCarrito(productoComprado)
 
   document.getElementById('tablaCarrito').innerHTML += `
@@ -215,13 +245,15 @@ function agregarCarrito (productoComprado) {
   localStorage.setItem('carritoDeCompras', JSON.stringify(carrito))
 }
 
+
 //MUESTRO LA INFORMACION DEL LOCAL STORAGE
 
 const cargarProductosDelLocalStorage = () => {
   const carritoString = localStorage.getItem('carritoDeCompras');
-  if (carritoString) {
+  const tabla = document.getElementById('tablaCarrito');
+  if (carritoString && tabla) {
     const carritoParseado = JSON.parse(carritoString);
-    const tabla = document.getElementById('tablaCarrito');
+
     carritoParseado.productosEnElCarrito.forEach((producto) => {
       carrito.agregarAlCarrito(producto)
       tabla.innerHTML += `
@@ -229,28 +261,29 @@ const cargarProductosDelLocalStorage = () => {
       <th>${producto.id}</th>
       <th>${producto.nombre}</th>
       <th>${producto.precio}</th>
+      <th><button id="botonEliminar${producto.id}">X</button></th>
     </tr>
   `;
     });
 
-    const total = document.getElementById ('totalCarrito');
+    const total = document.getElementById('totalCarrito');
     const totalString = carritoParseado.total
 
-      total.innerHTML += `
+    total.innerHTML += `
       <div id="totalCarrito" class="alert alert-primary" role="alert">
           El total dentro del carrito incluyendo IVA (21%) es de : $${totalString}
       </div>
       `;
   }
 }
-  cargarProductosDelLocalStorage() 
+cargarProductosDelLocalStorage()
 
 
-//Sumar los precios dentro del carrito
-
-let sumaPrecioCarrito = document.getElementById('totalCarrito')
+//SUMAR LOS PRECIOS DENTRO DEL CARRITO
 
 function sumaCarrito () {
+  let sumaPrecioCarrito = document.getElementById('totalCarrito')
+
   let total = carrito.mostrarCarrito().reduce((acc, producto) => acc + producto.precio * 1.21, 0)
   sumaPrecioCarrito.innerHTML = `
   <div id="totalCarrito" class="alert alert-primary" role="alert">
@@ -258,7 +291,6 @@ function sumaCarrito () {
   </div>
   `
 }
-
 
 
 

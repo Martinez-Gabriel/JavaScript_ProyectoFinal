@@ -41,8 +41,22 @@ Swal.fire({
       <button id="finCompra" type="submit" class="btn btn-primary">Finalizar Compra</button>
     <div>
     `;
+    const finalizarCompraBtn = document.getElementById(`finCompra`)
+    finalizarCompraBtn.addEventListener('click', () => {
+      Swal.fire({
+        title: 'Su compra se ha relizado con exito!!!',
+        text: 'Gracias por elegirnos',
+        confirmButtonText: 'Ok',
+        icon: 'success',
+      });
+    document.getElementById("containerTitulo").innerHTML += `
+    <div id="containerTitulo" class="container mb-3"></div>
+    <div id = "containerCarrito"></div>`;
+    });
     cargarFiltros();
     cargarProductosDelLocalStorage();
+    
+    
 
 
   } else if (result.isDenied) {
@@ -55,7 +69,6 @@ Swal.fire({
   }
 })
 
-
 //CLASES
 
 class Carrito {
@@ -64,18 +77,18 @@ class Carrito {
     this.total = 0
   }
   agregarAlCarrito (producto) {
-
-    // Lógica para manejar la cantidad de un producto en el carrito
-    // Si el producto a agregar no existe en el carrito lo agrego con cantidad = 1
-    // Si el producto a agregar si existe en el carrito le sumo 1 a la cantidad
-
+  
+    //LOGICA PARA MANEJAR LA CANTIDAD DE UN PRODUCTO EN EL CARRITO
+    //SI EL PRODUCTO A AGREGAR NO EXISTE EN EL CARRITO LO AGREGO CON CANTIDAD = -1
+    //SI EL PRODUCTO A AGREGAR SI EXISTE EN EL CARRITO LE SUMO 1 A LA CANTIDAD
+  
     const productoPorAgregar = producto
 
-    // Busco el producto en el carrito
+    // BUSCO EL PRODUCTO EN EL CARRITO 
 
     const posicionEnElCarrito = this.productosEnElCarrito.findIndex((productoEnElCarrito) => productoEnElCarrito.id === producto.id)
 
-    // find index devuelve -1 si no encuentra el prod en el carrito, si lo encuentra devuelve la posición
+    //FIND INDEX DEVUELVE -1 SI NO ENCUENTRA EL PRODUCTO EN EL CARRITO, SI LO ENCUENTRA DEVUELVE LA POSICION
 
     if (posicionEnElCarrito === -1) {
       productoPorAgregar.cantidad = 1
@@ -239,7 +252,7 @@ const mostrarProductosFiltrados = (nombre) => {
 
 }
 
-// Funcion para pintar el carrito
+// FUNCION PARA PINTAR EL CARRITO
 
 const dibujarCarrito = () => {
   const contenedorCarrito = document.getElementById('tablaCarrito')
@@ -263,7 +276,7 @@ const dibujarCarrito = () => {
       <th>${prodEnElCarrito.nombre}</th>
       <th>${prodEnElCarrito.precio}</th>
       <th>${prodEnElCarrito.cantidad}</th>
-      <th><button id="botonEliminar${prodEnElCarrito.id}">X</button></th>
+      <th><button id="botonEliminar${prodEnElCarrito.id}" class="btn btn-danger">X</button></th>
     </tr>
     `
   })
@@ -309,7 +322,6 @@ function borrarDelCarrito (id) {
   dibujarCarrito();
 }
 
-
 //MUESTRO LA INFORMACION DEL LOCAL STORAGE
 
 const cargarProductosDelLocalStorage = () => {
@@ -326,8 +338,6 @@ const cargarProductosDelLocalStorage = () => {
 }
 
 cargarProductosDelLocalStorage()
-
-
 
 
 

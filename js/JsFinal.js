@@ -29,6 +29,8 @@ Swal.fire({
           <th>ID</th>
           <th>Nombre</th>
           <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Quitar</th>
           </tr>
         </table>
       </div>
@@ -62,21 +64,37 @@ class Carrito {
     this.total = 0
   }
   agregarAlCarrito (producto) {
-    this.productosEnElCarrito.push(producto)
+
+    // Lógica para manejar la cantidad de un producto en el carrito
+    // Si el producto a agregar no existe en el carrito lo agrego con cantidad = 1
+    // Si el producto a agregar si existe en el carrito le sumo 1 a la cantidad
+
+    const productoPorAgregar = producto
+
+    // Busco el producto en el carrito
+
+    const posicionEnElCarrito = this.productosEnElCarrito.findIndex((productoEnElCarrito) => productoEnElCarrito.id === producto.id)
+
+    // find index devuelve -1 si no encuentra el prod en el carrito, si lo encuentra devuelve la posición
+
+    if (posicionEnElCarrito === -1) {
+      productoPorAgregar.cantidad = 1
+      this.productosEnElCarrito.push(producto)
+    } else {
+      this.productosEnElCarrito[posicionEnElCarrito].cantidad = this.productosEnElCarrito[posicionEnElCarrito].cantidad + 1
+    }
     this.calcularPrecioTotalMasIva()
   }
-  borrarCarrito(id) {
-    document.getElementById(`botonEliminar${producto.id}`).addEventListener('click', function () {
-      const eliminarProductoDelCarrito = carrito.filter((producto) => producto.id === nombre)
-      eliminarProductoDelCarrito.splice (1,2)
-    })
+  borrarDelCarrito (id) {
+    this.productosEnElCarrito = this.productosEnElCarrito.filter((prodEnElCart) => prodEnElCart.id !== id)
+    this.calcularPrecioTotalMasIva()
   }
 
   mostrarCarrito () {
     return this.productosEnElCarrito
   }
   calcularPrecioTotalMasIva () {
-    this.total = this.productosEnElCarrito.reduce((acc, val) => acc + val.precio * 1.21, 0)
+    this.total = this.productosEnElCarrito.reduce((acc, val) => acc + (val.precio * val.cantidad) * 1.21, 0)
     return this.total
   }
 }
@@ -207,7 +225,7 @@ const mostrarProductosFiltrados = (nombre) => {
     `
     contenedorProductos.append(contenedorCard)
 
-    
+
     document.getElementById(`boton${producto.id}`).addEventListener('click', function () {
       agregarCarrito(producto);
       Swal.fire({
@@ -215,26 +233,67 @@ const mostrarProductosFiltrados = (nombre) => {
         text: 'Se Agrego el producto al carrito correctamente',
         confirmButtonText: 'Ok',
         icon: 'success',
-      }); 
+      });
     })
   }
 
 }
 
+// Funcion para pintar el carrito
+
+const dibujarCarrito = () => {
+  const contenedorCarrito = document.getElementById('tablaCarrito')
+
+  if (!contenedorCarrito) return;
+
+  contenedorCarrito.innerHTML = ''
+  contenedorCarrito.innerHTML = `
+    <tr>
+    <th>ID</th>
+    <th>Nombre</th>
+    <th>Precio</th>
+    <th>Cantidad</th>
+    <th>Quitar</th>
+    </tr>
+  `
+  carrito.mostrarCarrito().forEach((prodEnElCarrito) => {
+    contenedorCarrito.innerHTML += `
+    <tr>
+      <th>${prodEnElCarrito.id}</th>
+      <th>${prodEnElCarrito.nombre}</th>
+      <th>${prodEnElCarrito.precio}</th>
+      <th>${prodEnElCarrito.cantidad}</th>
+      <th><button id="botonEliminar${prodEnElCarrito.id}">X</button></th>
+    </tr>
+    `
+  })
+
+  carrito.mostrarCarrito().forEach((prodEnElCarrito) => {
+    document.getElementById(`botonEliminar${prodEnElCarrito.id}`).addEventListener('click', function () {
+      borrarDelCarrito(prodEnElCarrito.id);
+      
+    })
+  })
+
+  const total = document.getElementById('totalCarrito');
+  const totalString = carrito.total
+
+  total.innerHTML = ''
+
+  total.innerHTML = `
+    <div id="totalCarrito" class="alert alert-primary" role="alert">
+        El total dentro del carrito incluyendo IVA (21%) es de : $${totalString}
+    </div>
+    `;
+}
+
 //AGREGO PRODUCTOS AL CARRITO DE COMPRAS
 
 function agregarCarrito (productoComprado) {
-  //debugger
+  // aca hago la modificación para que siempre pinte el carrito completo
   carrito.agregarAlCarrito(productoComprado)
 
-  document.getElementById('tablaCarrito').innerHTML += `
-    <tr>
-      <th>${productoComprado.id}</th>
-      <th>${productoComprado.nombre}</th>
-      <th>${productoComprado.precio}</th>
-    </tr>
-  `
-  sumaCarrito()
+  dibujarCarrito()
 
   //guardo las comprar del carrito en el localStorage
   let productosEnCarritoLocalParseado = [];
@@ -245,52 +304,31 @@ function agregarCarrito (productoComprado) {
   localStorage.setItem('carritoDeCompras', JSON.stringify(carrito))
 }
 
+function borrarDelCarrito (id) {
+  carrito.borrarDelCarrito(id)
+  dibujarCarrito();
+}
+
 
 //MUESTRO LA INFORMACION DEL LOCAL STORAGE
 
 const cargarProductosDelLocalStorage = () => {
   const carritoString = localStorage.getItem('carritoDeCompras');
-  const tabla = document.getElementById('tablaCarrito');
-  if (carritoString && tabla) {
+  if (carritoString) {
     const carritoParseado = JSON.parse(carritoString);
 
     carritoParseado.productosEnElCarrito.forEach((producto) => {
       carrito.agregarAlCarrito(producto)
-      tabla.innerHTML += `
-    <tr>
-      <th>${producto.id}</th>
-      <th>${producto.nombre}</th>
-      <th>${producto.precio}</th>
-      <th><button id="botonEliminar${producto.id}">X</button></th>
-    </tr>
-  `;
     });
 
-    const total = document.getElementById('totalCarrito');
-    const totalString = carritoParseado.total
-
-    total.innerHTML += `
-      <div id="totalCarrito" class="alert alert-primary" role="alert">
-          El total dentro del carrito incluyendo IVA (21%) es de : $${totalString}
-      </div>
-      `;
+    dibujarCarrito()
   }
 }
+
 cargarProductosDelLocalStorage()
 
 
-//SUMAR LOS PRECIOS DENTRO DEL CARRITO
 
-function sumaCarrito () {
-  let sumaPrecioCarrito = document.getElementById('totalCarrito')
-
-  let total = carrito.mostrarCarrito().reduce((acc, producto) => acc + producto.precio * 1.21, 0)
-  sumaPrecioCarrito.innerHTML = `
-  <div id="totalCarrito" class="alert alert-primary" role="alert">
-  El total dentro del carrito incluyendo IVA (21%) es de : $${total}
-  </div>
-  `
-}
 
 
 
